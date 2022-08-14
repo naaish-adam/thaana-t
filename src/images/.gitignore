@@ -1,0 +1,3 @@
+# to keep images dir in git repo 
+*
+!.gitignore
