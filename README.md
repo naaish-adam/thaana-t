@@ -7,17 +7,15 @@ Source code for [@thaana_t_bot](https://t.me/thaana_t_bot) used to transliterate
 
 ### Todo/Issues:
 
+#### Bot
+
 - [x] Inline bot
 - [ ] Webhook initialization
 - [ ] Expired inline queries?
 - [ ] Refactor command extraction
-- [x] A consonant after "h" messes up sukun (if a vowel before "h")
-- [x] Issues with words like "AI" in dhivehi "eyai"
-- [x] Issues with y and yaa, "kiyaa ulheny" etc
-- [x] hh conflicts with sukun for h
-- [x] mm should be a noonu sukun (mamma -> manma)
-- [x] "Feneyey" is a hard word
-- [x] Support "y" at the end as "ee"? (conflicts the above)
-- [ ] How to deal with husnoonu? (example: rangalhu vs rangandu)
+
+#### Transliteration
+
+- [ ] Hunoonu?
 - [ ] Sheenu vs shaviyani?
-- [ ] Add comments + cleanup
+- [ ] Consecutive vowels support
