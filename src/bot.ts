@@ -113,3 +113,9 @@ export const editMessage = async (
     console.log("ERR:", err);
   }
 };
+
+export const getWehbookInfo = async () => {};
+
+export const setWehbook = async () => {};
+
+export const deleteWebhook = async () => {};

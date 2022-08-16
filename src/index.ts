@@ -33,33 +33,27 @@ f.post("/", async function (request) {
   const from =
     update.message?.from.username ??
     update.edited_message?.from.username ??
-    update.inline_query?.from.username ??
-    "No one";
+    update.inline_query?.from.username;
 
-  console.log(
-    `> ${from} said: ${
-      update.message?.text ||
-      update.edited_message?.text ||
-      update.inline_query?.query ||
-      "no text"
-    }`
-  );
+  if (from) {
+    f.log.info(
+      `${from} said: ${
+        update.message?.text ||
+        update.edited_message?.text ||
+        update.inline_query?.query ||
+        ""
+      }`
+    );
+  }
 
   if (update.message?.text) {
-    const message = update.message.text;
-    const command = message.split(" ")[0];
-
-    if (command === "/t") {
-      await sendMessage(
-        update.message.chat.id,
-        transliterate(message.slice(2).toLowerCase())
-      );
-    }
+    await sendMessage(
+      update.message.chat.id,
+      transliterate(update.message.text.toLowerCase())
+    );
   } else if (update.inline_query?.query) {
-    const query = update.inline_query.query.trim().toLowerCase();
+    const query = update.inline_query.query.toLowerCase();
     const command = query.split(" ")[0];
-
-    if (!query) return;
 
     if (command === "/p") {
       const split = query.split(" ");
@@ -121,7 +115,7 @@ f.post("/", async function (request) {
           path.join(__dirname, "images", `${update.inline_query!.id}.png`),
           (err) => {
             if (err) {
-              console.log("\nError: Couldn't delete file", err);
+              f.log.error("\nError: Couldn't delete file", err);
             }
           }
         );
@@ -147,6 +141,4 @@ f.listen({ port: PORT }, function (err) {
     f.log.error(err);
     process.exit(1);
   }
-
-  console.log(`> server listening on http://localhost:${PORT}`);
 });
