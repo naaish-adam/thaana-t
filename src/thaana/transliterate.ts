@@ -1,4 +1,4 @@
-import { AL, L, V } from "./thaana";
+import { AL, L, V } from "./alphabet";
 
 const isVowel: { [key: string]: boolean } = {
   a: true,
@@ -50,7 +50,7 @@ const latinToDivChar: { [key: string]: string } = {
   hh: AL.Hh,
   q: AL.Qf,
 
-  x: `${L.Kf}${V.Sk}${L.Za}`,
+  x: `${L.Kf}${V.Sk}${L.Sn}`,
   wh: L.Vv,
 
   [" a"]: ` ${L.Al}${V.A}`,
@@ -91,7 +91,7 @@ const latinToDivChar: { [key: string]: string } = {
 };
 
 const RTL_Q_MARK = "\u2E2E";
-export const RTL_MARK = "\u200F";
+const RTL_MARK = "\u200F";
 
 export const transliterate = (word: string): string => {
   let newWord = "";
@@ -110,9 +110,13 @@ export const transliterate = (word: string): string => {
   for (; i < word.length; i++) {
     const thisNext = word[i] + word[i + 1] ?? "";
 
-    if (latinToDivChar[thisNext]) {
+    const isVowelAfterEy = thisNext === "ey" && isVowel[word[i + 2]];
+    if (latinToDivChar[thisNext] && !isVowelAfterEy) {
       if (thisNext === "ii" && word[i - 1] === "a" && latinToDivChar[i - 2])
         continue;
+
+      // && latinToDivChar[i - 2]
+      if (thisNext === "ey" && word[i - 1] === "o") continue;
 
       newWord += latinToDivChar[thisNext];
 
@@ -129,7 +133,14 @@ export const transliterate = (word: string): string => {
       isVowel[word[i - 1]] &&
       !latinToDivChar[word[i + 1]]
     ) {
-      newWord = newWord.slice(0, -1) + L.Al + V.Sk;
+      // sh sukun
+      if (word[i] === "h" && word[i - 1] === "a" && word[i - 2] === "r") {
+        newWord = newWord.slice(0, -1) + L.Sh + V.Sk;
+      }
+      // al sukun
+      else {
+        newWord = newWord.slice(0, -1) + L.Al + V.Sk;
+      }
     }
     // more sukun - support for th sukun (baii, kaiidha etc), sukun when double consonants (sappu, kakkaa)
     else if (
@@ -143,34 +154,44 @@ export const transliterate = (word: string): string => {
       word[i] !== "y"
     ) {
       const hExceptions = ["s", "l", "d", "t", "k"];
-      const equalExceptions = ["n"];
       // sukun for double consonants
       if (
-        (word[i + 1] === word[i] && !equalExceptions.includes(word[i + 1])) ||
+        (word[i + 1] === word[i] && word[i + 1] !== "n") ||
         word[i + 1] === "h" ||
         (word[i] === "h" && !hExceptions.includes(word[i - 1]))
       ) {
-        newWord = newWord.slice(0, -1) + L.Al;
+        newWord = newWord.slice(0, -1) + (word[i] === "m" ? L.Nn + V.Sk : L.Al);
       }
-
       // th sukun
       if (word[i] === "i") {
         newWord = newWord.slice(0, -1) + L.Th + V.Sk;
+      } else if (word[i] === "h" && word[i - 1] === "h") {
+        newWord = newWord.slice(0, -1) + AL.Hh + V.Sk;
       } else {
         newWord += V.Sk;
       }
     }
-    // for situations like mai, kai, etc. vowel with alifu
+    // for situations like mai, kai, etc. vowel with alifu. a i u ba bi bu
     else if (
       (isVowel[word[i]] || (word[i] === "y" && !latinToDivChar[word[i - 2]])) &&
       (isVowel[word[i - 1]] || isVowel[`${word[i - 2]}${word[i - 1]}`]) &&
       word[i] !== word[i - 1] &&
-      word[i - 1] !== "o"
+      !(word[i - 1] === "o" && word[i] === "a")
+      // &&
+      // word[i - 1] !== "y" // this is for that "y" case
     ) {
-      const extra = word[i] === "y" ? word[i - 1] : "";
+      const extra = word[i] === "y" && isVowel[word[i - 1]] ? word[i - 1] : "";
       newWord =
         newWord.slice(0, extra ? -3 : -1) +
         (latinToDivChar[` ${extra}${word[i]}`] ?? "").trimStart();
+    }
+    // "y" at the end as "ee"
+    else if (
+      word[i] === "y" &&
+      !isVowel[word[i - 1]] &&
+      latinToDivChar[word[i - 1]]
+    ) {
+      newWord = newWord.slice(0, -2) + V.Ii;
     }
   }
 

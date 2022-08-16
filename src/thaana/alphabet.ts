@@ -58,6 +58,3 @@ export const enum V {
   Oa = "\u07AF",
   Sk = "\u07B0",
 }
-
-export *  from "./thaana-keyboard";
-export *  from "./thaana-transliterate";

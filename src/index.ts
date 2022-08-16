@@ -30,6 +30,21 @@ f.get("/ping", async function (_, reply) {
 f.post("/", async function (request) {
   const update = request.body as Update;
 
+  const from =
+    update.message?.from.username ??
+    update.edited_message?.from.username ??
+    update.inline_query?.from.username ??
+    "No one";
+
+  console.log(
+    `> ${from} said: ${
+      update.message?.text ||
+      update.edited_message?.text ||
+      update.inline_query?.query ||
+      "no text"
+    }`
+  );
+
   if (update.message?.text) {
     const message = update.message.text;
     const command = message.split(" ")[0];
@@ -110,7 +125,7 @@ f.post("/", async function (request) {
             }
           }
         );
-      }, 5000);
+      }, 10000);
     } else {
       const text = transliterate(query);
       await answerInlineQuery(update.inline_query.id, [

@@ -1,8 +1,6 @@
-import { AL, L, V } from "./thaana";
+import { AL, L, V } from "./alphabet";
 
-// Thaana keyboard map
-
-export const engToDivChar: { [key: string]: string } = {
+const engToDivChar: { [key: string]: string } = {
   h: L.Ha,
   S: L.Sh,
   n: L.Nn,
