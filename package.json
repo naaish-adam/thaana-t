@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js",
-    "build": "tsc && rm -r dist/fonts && cp -r src/fonts dist/fonts && rm -r dist/images && cp -r src/images dist/images"
+    "build": "tsc && rm -rf dist/fonts && cp -r src/fonts dist/fonts && rm -rf dist/images && cp -r src/images dist/images"
   },
   "dependencies": {
     "@fastify/static": "^6.5.0",
