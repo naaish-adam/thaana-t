@@ -13,8 +13,8 @@ import {
 } from "./helpers/textToImage";
 import { transliterate } from "./thaana";
 
-const PORT = (process.env.PORT as unknown as number) ?? 3000;
-const APP_URL = process.env.APP_URL ?? `http://localhost:${PORT}`;
+const FINAL_PORT = (process.env.PORT as unknown as number) ?? 3000;
+const APP_URL = process.env.APP_URL ?? `http://localhost:${FINAL_PORT}`;
 
 const f = Fastify({ logger: true, disableRequestLogging: true });
 
@@ -136,7 +136,9 @@ f.post("/", async function (request) {
   }
 });
 
-f.listen({ port: PORT }, async function (err) {
+f.log.info(`\n MY PORT IS : ${FINAL_PORT}`);
+
+f.listen({ port: FINAL_PORT }, async function (err) {
   if (err) {
     f.log.error(err);
     process.exit(1);
