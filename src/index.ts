@@ -136,7 +136,7 @@ f.post("/", async function (request) {
   }
 });
 
-f.listen({ port: PORT }, async function (err) {
+f.listen({ port: PORT, host: process.env.HOST }, async function (err) {
   if (err) {
     f.log.error(err);
     process.exit(1);
