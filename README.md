@@ -10,7 +10,7 @@ Source code for [@thaana_t_bot](https://t.me/thaana_t_bot) used to transliterate
 #### Bot
 
 - [x] Inline bot
-- [ ] Webhook initialization
+- [x] Webhook initialization
 - [ ] Expired inline queries?
 - [ ] Refactor command extraction
 

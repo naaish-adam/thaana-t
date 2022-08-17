@@ -2,7 +2,7 @@ import axios from "axios";
 
 const TOKEN = process.env.BOT_TOKEN;
 
-const ai = axios.create({
+export const ai = axios.create({
   baseURL: `https://api.telegram.org/bot${TOKEN}`,
   timeout: 10000,
 });
@@ -114,8 +114,19 @@ export const editMessage = async (
   }
 };
 
-export const getWehbookInfo = async () => {};
+export const getWehbookInfo = async () => {
+  try {
+    const { data } = await ai.get(`/getWebhookInfo`);
+    return data?.result ?? {};
+  } catch (err) {
+    console.log("ERR:", err);
+  }
+};
 
-export const setWehbook = async () => {};
-
-export const deleteWebhook = async () => {};
+export const setWehbook = async (url: string) => {
+  try {
+    await ai.post(`/setWebhook?url=${url}`);
+  } catch (err) {
+    console.log("ERR:", err);
+  }
+};
