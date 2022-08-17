@@ -2,7 +2,7 @@ import axios from "axios";
 
 const TOKEN = process.env.BOT_TOKEN;
 
-export const ai = axios.create({
+const ai = axios.create({
   baseURL: `https://api.telegram.org/bot${TOKEN}`,
   timeout: 10000,
 });

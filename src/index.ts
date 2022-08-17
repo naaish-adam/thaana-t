@@ -4,14 +4,7 @@ import fs from "fs";
 import sizeOf from "image-size";
 import path from "path";
 
-import {
-  ai,
-  answerInlineQuery,
-  getWehbookInfo,
-  sendMessage,
-  setWehbook,
-  Update,
-} from "./bot";
+import { answerInlineQuery, sendMessage, setWehbook, Update } from "./bot";
 import {
   alignOpts,
   AlignValues,
@@ -147,33 +140,14 @@ f.listen({ port: PORT }, async function (err) {
   if (err) {
     f.log.error(err);
     process.exit(1);
-  } else {
-    f.log.info("Checking connection to webhook URL...");
-    const webhookInfo = await getWehbookInfo();
-
-    let error = "";
-
-    if (webhookInfo.url) {
-      try {
-        await ai.get(`${webhookInfo.url}/ping`);
-      } catch (err) {
-        error = "Couldn't connect to webhook URL.";
-      }
-    } else {
-      error = "No webhook URL set.";
-    }
-
-    if (error) {
-      f.log.info(error);
-      f.log.info("Setting webhook URL to that in .env file...");
-      try {
-        await ai.get(`${APP_URL}/ping`);
-        await setWehbook(`${APP_URL}`);
-        f.log.info(`Webhook URL set. ${APP_URL}`);
-      } catch (err) {
-        f.log.error("Couldn't set webhook URL.");
-        process.exit(1);
-      }
+  } else if (process.env.SET_WEBHOOK_URL === "true") {
+    f.log.info(`Setting webhook URL to that in .env file...`);
+    try {
+      await setWehbook(`${APP_URL}`);
+      f.log.info(`Webhook URL set. ${APP_URL}`);
+    } catch (err) {
+      f.log.error("Couldn't set webhook URL.");
+      process.exit(1);
     }
   }
 });
